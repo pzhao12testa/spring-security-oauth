@@ -1,16 +1,16 @@
-language: java
-
-jdk:
-  - oraclejdk8
-  - openjdk7
-
-services:
-  - redis-server
-
 install: ./mvnw -U install --quiet -DskipTests=true -P bootstrap
-
+jdk:
+- oraclejdk8
+language: java
 script:
-  - jdk_switcher use openjdk7
-  - ./mvnw clean test -P bootstrap
-#  - jdk_switcher use oraclejdk8
-#  - ./mvnw -U clean test -P spring5
+- touch /tmp/NOW
+- echo GIBSTUDYSTART $(date)
+- jdk_switcher use oraclejdk7
+- ./mvnw clean test -P bootstrap
+- jdk_switcher use oraclejdk8
+- ./mvnw -U clean test -P spring5
+- echo GIBSTUDYEND $(date)
+- cd $TRAVIS_BUILD_DIR
+- echo TESTNUM $(find . -name TEST-*.xml -newer /tmp/NOW | wc -l)
+services:
+- redis-server
